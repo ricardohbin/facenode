@@ -1,0 +1,16 @@
+{
+  "author": "Ricardo Bin <ricardohbin@gmail.com> (http://www.ricardohbin.com)",
+  "name": "facenode",
+  "description": "A simple integration with Facebook API",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ricardohbin/facenode.git"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
