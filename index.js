@@ -1,5 +1,6 @@
 /**
  * FaceNode
+ * Ricardo Bin <ricardohbin@gmail.com>
  */
 
 var https = require('https');
@@ -105,24 +106,25 @@ module.exports = function () {
 			});
 		},
 		/**
+		* @param: {Function} callbackFn
 		* @param: {Object} params
 		* @api: public 
 		*/
-		getGraph : function (params) {
-		// get : function(access_token,callbackFn,id) {
-			// 	var hash = '/' + (typeof id == 'number'?id:'me') +'?access_token=' + access_token;
-			// 	var doRequest = https.get(getFBData(hash),function(res) {
-			// 		res.setEncoding('utf8');
-			// 		res.on('data', function (data) {
-			// 			callbackFn(JSON.parse(data));
-			// 		});
-			// 	}).on('error', function(e) {
-			// 		console.log('Problemas na request -> ' + e.message);
-			// 	});
-			// },
-			// me : function(access_token,callbackFn) {
-			// 	this.get(access_token,callbackFn);
-			// }
+		getGraph : function (callbackFn, params) {
+			params = params || {};
+			var
+				id = params.id || 'me',
+				connectionType = params.connectionType || '',
+				queryString = params.queryString || '',
+				hash = '/' + id + '/' + connectionType + '?access_token=' + ACCESS_TOKEN + '&' + queryString;
+			https.get(getFBData(hash), function (res) {
+				res.setEncoding('utf8');
+				res.on('data', function (data) {
+					callbackFn(JSON.parse(data));
+				});
+			}).on('error', function (e) {
+				console.log('Problemas na request -> ' + e.message);
+			});
 		}
-	};	
-}();
+	};
+};
