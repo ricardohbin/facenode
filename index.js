@@ -10,7 +10,6 @@ module.exports = function () {
 	var APP_KEY = null,
 		SECRET_KEY = null,
 		REGISTERED_URL = null,
-		ACCESS_TOKEN = null,
 		/**
 		* @param: {String} hash		
 		* @api: public
@@ -22,13 +21,6 @@ module.exports = function () {
 				path: hash,
 				method: 'GET'
 			};
-		},
-		/**
-		* @param: {String} token		
-		* @api: private
-		*/
-		setAccessToken = function (token) {
-			ACCESS_TOKEN = token;
 		};
 	//public
 	return {
@@ -98,7 +90,6 @@ module.exports = function () {
 						callbackFn(false);
 						return;
 					}
-					setAccessToken(token);
 					callbackFn(token);
 				});
 			}).on('error', function (e) {
@@ -106,17 +97,19 @@ module.exports = function () {
 			});
 		},
 		/**
-		* @param: {Function} callbackFn
 		* @param: {Object} params
+		* @param: {Function} callbackFn
 		* @api: public 
 		*/
-		getGraph : function (callbackFn, params) {
+		getGraph : function (params, callbackFn) {
 			params = params || {};
 			var
 				id = params.id || 'me',
 				connectionType = params.connectionType || '',
 				queryString = params.queryString || '',
-				hash = '/' + id + '/' + connectionType + '?access_token=' + ACCESS_TOKEN + '&' + queryString;
+				token = params.token || '',
+				hash = '/' + id + '/' + connectionType + '?access_token=' + token + '&' + queryString;
+			console.log("Get GRAPH" + hash);
 			https.get(getFBData(hash), function (res) {
 				res.setEncoding('utf8');
 				res.on('data', function (data) {
