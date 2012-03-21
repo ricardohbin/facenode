@@ -1,7 +1,7 @@
 {
   "author": "Ricardo Bin <ricardohbin@gmail.com> (http://www.ricardohbin.com)",
   "name": "facenode",
-  "description": "A simple integration with Facebook API",
+  "description": "A simple integration with Facebook API with nodejs",
   "version": "0.0.1",
   "repository": {
     "type": "git",
