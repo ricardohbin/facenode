@@ -10,8 +10,9 @@ module.exports = function () {
 	var APP_KEY = null,
 		SECRET_KEY = null,
 		REGISTERED_URL = null,
+		ACCESS_TOKEN = null,
 		/**
-		* @param: {String} hash		
+		* @param: {String} hash
 		* @api: public
 		*/
 		getFBData = function (hash) {
@@ -21,6 +22,13 @@ module.exports = function () {
 				path: hash,
 				method: 'GET'
 			};
+		},
+		/**
+		* @param: {String} token		
+		* @api: private
+		*/
+		setAccessToken = function (token) {
+			ACCESS_TOKEN = token;
 		};
 	//public
 	return {
@@ -57,7 +65,7 @@ module.exports = function () {
 				return false;
 			}
 			if (typeof REGISTERED_URL === 'undefined') {
-				console.log("É necessário um REGISTERED_URL");
+				console.log("Missing REGISTERED_URL");
 				return false;
 			}
 			callbackFn('https://www.facebook.com/dialog/oauth?client_id=' + APP_KEY + '&redirect_uri=' + encodeURIComponent(REGISTERED_URL));
@@ -86,14 +94,16 @@ module.exports = function () {
 				res.on('data', function (token) {
 					if (token.indexOf('access_token') === -1) {
 						token = JSON.parse(token);
-						console.log("Ocorreu um erro na requisição do código: " + token.error.message + "-" + token.error.type);
+						console.log('Error on code request: ' + token.error.message + '-' + token.error.type);
 						callbackFn(false);
 						return;
 					}
+
+					//setAccessToken(token);
 					callbackFn(token);
 				});
 			}).on('error', function (e) {
-				console.log('Problemas na request para o FB. URL Inválida? ' + e.message);
+				console.log('Cant request facebook. Error: ' + e.message);
 			});
 		},
 		/**
@@ -109,15 +119,19 @@ module.exports = function () {
 				queryString = params.queryString || '',
 				token = params.token || '',
 				hash = '/' + id + '/' + connectionType + '?access_token=' + token + '&' + queryString;
-			console.log("Get GRAPH" + hash);
+			console.log("Get GRAPH " + hash);
 			https.get(getFBData(hash), function (res) {
+				var buffer = '';
 				res.setEncoding('utf8');
-				res.on('data', function (data) {
-					callbackFn(JSON.parse(data));
+				res.on('data', function (d) {
+					buffer += d;
+				});
+				res.on('end', function (d) {
+					callbackFn(JSON.parse(buffer));
 				});
 			}).on('error', function (e) {
-				console.log('Problemas na request -> ' + e.message);
+				console.log('Error requesting graph api URL. Error: ' + e.message);
 			});
 		}
 	};
-}();
+};

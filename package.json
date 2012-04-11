@@ -7,7 +7,18 @@
     "type": "git",
     "url": "git@github.com:ricardohbin/facenode.git"
   },
-  "dependencies": {},
+  "scripts": {
+    "test": "mocha test/*.js --spec"
+  },
+  "dependencies": {
+     "mocha": ">= 0.14.1"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://raw.github.com/ricardohbin/facenode/master/LICENSE"
+    }
+  ],
   "devDependencies": {},
   "optionalDependencies": {},
   "engines": {
